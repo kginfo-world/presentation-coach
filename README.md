@@ -1,0 +1,45 @@
+# Presentation Coach
+
+AI-assisted presentation practice app. Upload an audio recording, get a transcript-oriented analysis, and receive actionable speaking feedback.
+
+## Project Layout
+
+```text
+backend/   FastAPI API for audio upload and analysis
+frontend/  React + Vite UI for uploading recordings and viewing feedback
+```
+
+## Backend
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+API endpoint:
+
+```text
+POST /analyze
+```
+
+Upload an audio file using multipart form field `file`.
+
+## Frontend
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend expects the backend at `http://localhost:8000`.
+
+## MVP Scope
+
+- Upload a recorded speech audio file.
+- Estimate duration, pause count, speech rate, and filler expressions.
+- Return a structured feedback report.
+- Use a placeholder transcription service until a real STT provider is connected.

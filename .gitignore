@@ -1,0 +1,9 @@
+backend/.venv/
+backend/uploads/
+backend/*.log
+backend/test-sample.wav
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.DS_Store
