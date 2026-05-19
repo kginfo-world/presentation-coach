@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Presentation Coach</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <div class="intro">
+          <div class="brand-mark">🎙</div>
+          <div>
+            <h1>Presentation Coach</h1>
+            <p>녹음 파일을 업로드하면 발표 속도, 습관어, 연습 과제를 분석합니다.</p>
+          </div>
+        </div>
+
+        <form class="upload-panel" id="uploadForm">
+          <label class="dropzone">
+            <span class="upload-icon">⇧</span>
+            <span id="fileName">음성 파일 선택</span>
+            <input id="audioFile" type="file" accept="audio/*,.wav,.mp3,.m4a" />
+          </label>
+          <button id="submitButton" type="submit">분석 시작</button>
+          <p class="error" id="errorMessage"></p>
+        </form>
+
+        <section class="report hidden" id="report"></section>
+      </section>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
