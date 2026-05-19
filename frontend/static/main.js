@@ -51,10 +51,10 @@ function renderReport(result) {
   report.classList.remove("hidden");
   report.innerHTML = `
     <div class="metric-grid">
-      ${metric("말 속도", `${result.metrics.wordsPerMinute} WPM`)}
-      ${metric("단어 수", result.metrics.wordCount)}
-      ${metric("길이", `${result.metrics.durationSeconds}s`)}
-      ${metric("예상 멈춤", result.metrics.estimatedPauseCount)}
+      ${metric("음성 길이", `${result.metrics.durationSeconds}s`)}
+      ${metric("침묵 비율", `${Math.round(result.metrics.silenceRatio * 100)}%`)}
+      ${metric("평균 볼륨", `${result.metrics.averageVolumePercent}%`)}
+      ${metric("긴 멈춤", result.metrics.estimatedPauseCount)}
     </div>
 
     <div class="report-section">
@@ -67,7 +67,7 @@ function renderReport(result) {
       ${
         fillerEntries.length
           ? `<div class="chips">${fillerEntries.map(([word, count]) => `<span>${escapeHtml(word)}: ${count}</span>`).join("")}</div>`
-          : "<p>반복 감지된 습관어가 없습니다.</p>"
+          : "<p>STT가 연결되면 습관어를 계산할 수 있습니다.</p>"
       }
     </div>
 

@@ -4,12 +4,20 @@ import { Mic, UploadCloud } from "lucide-react";
 type AnalysisResult = {
   filename: string;
   transcript: string;
+  transcription: {
+    status: string;
+    message: string;
+  };
   metrics: {
     durationSeconds: number;
     wordCount: number;
     wordsPerMinute: number;
     estimatedPauseCount: number;
     fillerCounts: Record<string, number>;
+    silenceRatio: number;
+    averageVolumePercent: number;
+    peakVolumePercent: number;
+    supportedAudioMetrics: boolean;
   };
   feedback: {
     summary: string;
@@ -99,10 +107,10 @@ function AnalysisReport({ result }: { result: AnalysisResult }) {
   return (
     <section className="report">
       <div className="metric-grid">
-        <Metric label="말 속도" value={`${result.metrics.wordsPerMinute} WPM`} />
-        <Metric label="단어 수" value={`${result.metrics.wordCount}`} />
-        <Metric label="길이" value={`${result.metrics.durationSeconds}s`} />
-        <Metric label="예상 멈춤" value={`${result.metrics.estimatedPauseCount}`} />
+        <Metric label="음성 길이" value={`${result.metrics.durationSeconds}s`} />
+        <Metric label="침묵 비율" value={`${Math.round(result.metrics.silenceRatio * 100)}%`} />
+        <Metric label="평균 볼륨" value={`${result.metrics.averageVolumePercent}%`} />
+        <Metric label="긴 멈춤" value={`${result.metrics.estimatedPauseCount}`} />
       </div>
 
       <div className="report-section">
@@ -119,7 +127,7 @@ function AnalysisReport({ result }: { result: AnalysisResult }) {
             ))}
           </div>
         ) : (
-          <p>반복 감지된 습관어가 없습니다.</p>
+          <p>STT가 연결되면 습관어를 계산할 수 있습니다.</p>
         )}
       </div>
 

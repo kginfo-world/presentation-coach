@@ -40,6 +40,6 @@ The frontend expects the backend at `http://localhost:8000`.
 ## MVP Scope
 
 - Upload a recorded speech audio file.
-- Estimate duration, pause count, speech rate, and filler expressions.
+- Estimate WAV duration, pause count, silence ratio, and volume from the real audio waveform.
 - Return a structured feedback report.
-- Use a placeholder transcription service until a real STT provider is connected.
+- Report clearly that transcript, filler words, and exact speaking speed require a real STT provider.

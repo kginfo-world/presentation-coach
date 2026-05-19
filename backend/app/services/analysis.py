@@ -12,7 +12,11 @@ def analyze_recording(audio_path: Path, original_filename: str) -> dict:
 
     return {
         "filename": original_filename,
-        "transcript": transcript.text,
+        "transcript": transcript.text or transcript.message,
+        "transcription": {
+            "status": transcript.status,
+            "message": transcript.message,
+        },
         "metrics": metrics,
         "feedback": feedback,
     }
