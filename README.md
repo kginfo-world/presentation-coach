@@ -7,7 +7,12 @@ AI-assisted presentation practice app. Upload an audio recording, get a transcri
 ```text
 backend/   FastAPI API for audio upload and analysis
 frontend/  React + Vite UI for uploading recordings and viewing feedback
+docs/      Technical architecture and project documentation
 ```
+
+Technical documentation:
+
+- [Technical Architecture](docs/technical-architecture.md)
 
 ## Backend
 
