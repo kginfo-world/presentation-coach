@@ -1,4 +1,5 @@
 backend/.venv/
+backend/.env
 backend/uploads/
 backend/*.log
 backend/*.wav

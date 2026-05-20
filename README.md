@@ -16,6 +16,8 @@ cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+Copy-Item .env.example .env
+# Edit .env and set OPENAI_API_KEY
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -42,4 +44,5 @@ The frontend expects the backend at `http://localhost:8000`.
 - Upload a recorded speech audio file.
 - Estimate WAV duration, pause count, silence ratio, and volume from the real audio waveform.
 - Return a structured feedback report.
-- Report clearly that transcript, filler words, and exact speaking speed require a real STT provider.
+- Use OpenAI speech-to-text when `OPENAI_API_KEY` is configured.
+- Fall back to waveform-only analysis when the API key is missing or transcription fails.

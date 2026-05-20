@@ -46,8 +46,8 @@ def build_feedback(transcript: str, metrics: dict) -> dict:
     if transcript.strip():
         _add_text_feedback(transcript, metrics, strengths, improvements, practice_tasks)
     else:
-        improvements.append("아직 STT가 연결되지 않아 습관어와 정확한 말하기 속도는 측정하지 않았습니다.")
-        practice_tasks.append("다음 단계로 STT를 연결하면 습관어, 문장 구조, 실제 발화 속도까지 분석할 수 있습니다.")
+        improvements.append("STT가 완료되지 않아 습관어와 정확한 말하기 속도는 측정하지 않았습니다.")
+        practice_tasks.append("OPENAI_API_KEY를 설정하면 실제 발화 텍스트, 습관어, 문장 구조까지 분석할 수 있습니다.")
 
     return {
         "summary": "이 리포트는 실제 음성 파형의 길이, 침묵, 긴 멈춤, 볼륨을 기준으로 생성되었습니다.",

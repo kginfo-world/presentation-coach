@@ -16,6 +16,7 @@ def analyze_recording(audio_path: Path, original_filename: str) -> dict:
         "transcription": {
             "status": transcript.status,
             "message": transcript.message,
+            "model": transcript.model,
         },
         "metrics": metrics,
         "feedback": feedback,
