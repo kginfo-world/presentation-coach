@@ -1,12 +1,28 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Mic, UploadCloud } from "lucide-react";
 
+type DetailItem = {
+  title: string;
+  finding: string;
+  evidence: string;
+  recommendation: string;
+  priority: "low" | "medium" | "high" | string;
+};
+
+type RevisionTarget = {
+  target: string;
+  reason: string;
+  howToFix: string;
+  example: string;
+};
+
 type AnalysisResult = {
   filename: string;
   transcript: string;
   transcription: {
     status: string;
     message: string;
+    model?: string | null;
   };
   metrics: {
     durationSeconds: number;
@@ -21,9 +37,12 @@ type AnalysisResult = {
   };
   feedback: {
     summary: string;
+    overallReview?: string;
     strengths: string[];
     improvements: string[];
     practiceTasks: string[];
+    detailedAnalysis?: DetailItem[];
+    revisionTargets?: RevisionTarget[];
   };
 };
 
@@ -79,7 +98,7 @@ export function App() {
           </div>
           <div>
             <h1>Presentation Coach</h1>
-            <p>녹음 파일을 업로드하면 발표 속도, 습관어, 연습 과제를 분석합니다.</p>
+            <p>녹음 파일을 업로드하면 발표 속도, 습관어, 근거 기반 개선점을 분석합니다.</p>
           </div>
         </div>
 
@@ -109,8 +128,13 @@ function AnalysisReport({ result }: { result: AnalysisResult }) {
       <div className="metric-grid">
         <Metric label="음성 길이" value={`${result.metrics.durationSeconds}s`} />
         <Metric label="침묵 비율" value={`${Math.round(result.metrics.silenceRatio * 100)}%`} />
-        <Metric label="평균 볼륨" value={`${result.metrics.averageVolumePercent}%`} />
+        <Metric label="말 속도" value={`${result.metrics.wordsPerMinute} WPM`} />
         <Metric label="긴 멈춤" value={`${result.metrics.estimatedPauseCount}`} />
+      </div>
+
+      <div className="report-section">
+        <h2>종합 분석</h2>
+        <p>{result.feedback.overallReview ?? result.feedback.summary}</p>
       </div>
 
       <div className="report-section">
@@ -119,7 +143,7 @@ function AnalysisReport({ result }: { result: AnalysisResult }) {
       </div>
 
       <div className="report-section">
-        <h2>Filler Words</h2>
+        <h2>습관어</h2>
         {fillerEntries.length > 0 ? (
           <div className="chips">
             {fillerEntries.map(([word, count]) => (
@@ -127,12 +151,14 @@ function AnalysisReport({ result }: { result: AnalysisResult }) {
             ))}
           </div>
         ) : (
-          <p>STT가 연결되면 습관어를 계산할 수 있습니다.</p>
+          <p>반복 감지된 습관어가 없습니다.</p>
         )}
       </div>
 
       <FeedbackList title="좋은 점" items={result.feedback.strengths} />
       <FeedbackList title="개선할 점" items={result.feedback.improvements} />
+      <DetailedAnalysis items={result.feedback.detailedAnalysis ?? []} />
+      <RevisionTargets items={result.feedback.revisionTargets ?? []} />
       <FeedbackList title="다음 연습" items={result.feedback.practiceTasks} />
     </section>
   );
@@ -154,6 +180,52 @@ function FeedbackList({ title, items }: { title: string; items: string[] }) {
       <ul>
         {items.map((item) => (
           <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function DetailedAnalysis({ items }: { items: DetailItem[] }) {
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="report-section">
+      <h2>근거 기반 상세 분석</h2>
+      <ul>
+        {items.map((item) => (
+          <li key={`${item.title}-${item.evidence}`}>
+            <strong>{item.title}</strong>: {item.finding}
+            <br />
+            근거: {item.evidence}
+            <br />
+            수정 방향: {item.recommendation}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function RevisionTargets({ items }: { items: RevisionTarget[] }) {
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="report-section">
+      <h2>수정해야 할 부분</h2>
+      <ul>
+        {items.map((item) => (
+          <li key={item.target}>
+            <strong>{item.target}</strong>: {item.reason}
+            <br />
+            방법: {item.howToFix}
+            <br />
+            예시: {item.example}
+          </li>
         ))}
       </ul>
     </div>

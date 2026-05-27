@@ -53,8 +53,13 @@ function renderReport(result) {
     <div class="metric-grid">
       ${metric("음성 길이", `${result.metrics.durationSeconds}s`)}
       ${metric("침묵 비율", `${Math.round(result.metrics.silenceRatio * 100)}%`)}
-      ${metric("평균 볼륨", `${result.metrics.averageVolumePercent}%`)}
+      ${metric("말 속도", `${result.metrics.wordsPerMinute} WPM`)}
       ${metric("긴 멈춤", result.metrics.estimatedPauseCount)}
+    </div>
+
+    <div class="report-section">
+      <h2>종합 분석</h2>
+      <p>${escapeHtml(result.feedback.overallReview ?? result.feedback.summary)}</p>
     </div>
 
     <div class="report-section">
@@ -63,16 +68,18 @@ function renderReport(result) {
     </div>
 
     <div class="report-section">
-      <h2>Filler Words</h2>
+      <h2>습관어</h2>
       ${
         fillerEntries.length
           ? `<div class="chips">${fillerEntries.map(([word, count]) => `<span>${escapeHtml(word)}: ${count}</span>`).join("")}</div>`
-          : "<p>STT가 연결되면 습관어를 계산할 수 있습니다.</p>"
+          : "<p>반복 감지된 습관어가 없습니다.</p>"
       }
     </div>
 
     ${feedbackList("좋은 점", result.feedback.strengths)}
     ${feedbackList("개선할 점", result.feedback.improvements)}
+    ${detailedAnalysis(result.feedback.detailedAnalysis ?? [])}
+    ${revisionTargets(result.feedback.revisionTargets ?? [])}
     ${feedbackList("다음 연습", result.feedback.practiceTasks)}
   `;
 }
@@ -95,8 +102,58 @@ function feedbackList(title, items) {
   `;
 }
 
+function detailedAnalysis(items) {
+  if (!items.length) {
+    return "";
+  }
+
+  return `
+    <div class="report-section">
+      <h2>근거 기반 상세 분석</h2>
+      <ul>
+        ${items
+          .map(
+            (item) => `
+              <li>
+                <strong>${escapeHtml(item.title)}</strong>: ${escapeHtml(item.finding)}<br>
+                근거: ${escapeHtml(item.evidence)}<br>
+                수정 방향: ${escapeHtml(item.recommendation)}
+              </li>
+            `,
+          )
+          .join("")}
+      </ul>
+    </div>
+  `;
+}
+
+function revisionTargets(items) {
+  if (!items.length) {
+    return "";
+  }
+
+  return `
+    <div class="report-section">
+      <h2>수정해야 할 부분</h2>
+      <ul>
+        ${items
+          .map(
+            (item) => `
+              <li>
+                <strong>${escapeHtml(item.target)}</strong>: ${escapeHtml(item.reason)}<br>
+                방법: ${escapeHtml(item.howToFix)}<br>
+                예시: ${escapeHtml(item.example)}
+              </li>
+            `,
+          )
+          .join("")}
+      </ul>
+    </div>
+  `;
+}
+
 function escapeHtml(value) {
-  return value.replace(/[&<>"']/g, (char) => {
+  return String(value).replace(/[&<>"']/g, (char) => {
     const entities = {
       "&": "&amp;",
       "<": "&lt;",
